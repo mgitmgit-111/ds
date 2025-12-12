@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Node.js Complete Documentation</title>
+    <style>
+        :root {
+            --bg-primary: #ffffff;
+            --bg-secondary: #f5f5f5;
+            --text-primary: #000000;
+            --text-secondary: #4a4a4a;
+            --border-color: #e0e0e0;
+            --code-bg: #f8f8f8;
+            --hover-bg: #ebebeb;
+        }
+
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.6;
+        }
+
+        .container {
+            display: flex;
+            height: 100vh;
+        }
+
+        .sidebar {
+            width: 280px;
+            background: var(--bg-secondary);
+            border-right: 1px solid var(--border-color);
+            overflow-y: auto;
+            position: fixed;
+            height: 100vh;
+        }
+
+        .sidebar-header {
+            padding: 24px 20px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .sidebar-header h1 {
+            font-size: 20px;
+            font-weight: 600;
+        }
+
+        .nav-section {
+            padding: 16px 0;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .nav-section h3 {
+            padding: 8px 20px;
+            font-size: 12px;
+            font-weight: 600;
+            text-transform: uppercase;
+            color: var(--text-secondary);
+            letter-spacing: 0.5px;
+        }
+
+        .nav-item {
+            padding: 10px 20px;
+            cursor: pointer;
+            transition: background 0.2s;
+            font-size: 14px;
+        }
+
+        .nav-item:hover {
+            background: var(--hover-bg);
+        }
+
+        .nav-item.active {
+            background: var(--hover-bg);
+            font-weight: 600;
+            border-left: 3px solid var(--text-primary);
+            padding-left: 17px;
+        }
+
+        .content {
+            margin-left: 280px;
+            flex: 1;
+            overflow-y: auto;
+            padding: 40px 60px;
+        }
+
+        .doc-section {
+            display: none;
+            max-width: 900px;
+        }
+
+        .doc-section.active {
+            display: block;
+        }
+
+        h2 {
+            font-size: 32px;
+            margin-bottom: 24px;
+            font-weight: 600;
+        }
+
+        h3 {
+            font-size: 24px;
+            margin: 32px 0 16px;
+            font-weight: 600;
+        }
+
+        h4 {
+            font-size: 18px;
+            margin: 24px 0 12px;
+            font-weight: 600;
+        }
+
+        p {
+            margin-bottom: 16px;
+            color: var(--text-secondary);
+        }
+
+        .code-block {
+            position: relative;
+            margin: 20px 0;
+        }
+
+        .code-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: var(--bg-secondary);
+            padding: 8px 16px;
+            border: 1px solid var(--border-color);
+            border-bottom: none;
+            border-radius: 4px 4px 0 0;
+        }
+
+        .code-label {
+            font-size: 12px;
+            font-weight: 600;
+            color: var(--text-secondary);
+        }
+
+        .copy-btn {
+            background: var(--text-primary);
+            color: var(--bg-primary);
+            border: none;
+            padding: 6px 12px;
+            border-radius: 3px;
+            font-size: 12px;
+            cursor: pointer;
+            font-weight: 500;
+            transition: opacity 0.2s;
+        }
+
+        .copy-btn:hover {
+            opacity: 0.8;
+        }
+
+        .copy-btn.copied {
+            background: #4a4a4a;
+        }
+
+        pre {
+            background: var(--code-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 0 0 4px 4px;
+            padding: 16px;
+            overflow-x: auto;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 14px;
+            line-height: 1.5;
+        }
+
+        code {
+            background: var(--code-bg);
+            padding: 2px 6px;
+            border-radius: 3px;
+            font-family: 'Courier New', Courier, monospace;
+            font-size: 13px;
+        }
+
+        pre code {
+            background: none;
+            padding: 0;
+        }
+
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 20px 0;
+            background: var(--bg-primary);
+            border: 1px solid var(--border-color);
+        }
+
+        th, td {
+            padding: 12px 16px;
+            text-align: left;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        th {
+            background: var(--bg-secondary);
+            font-weight: 600;
+            font-size: 14px;
+        }
+
+        td {
+            font-size: 14px;
+            color: var(--text-secondary);
+        }
+
+        ul, ol {
+            margin: 16px 0 16px 24px;
+        }
+
+        li {
+            margin-bottom: 8px;
+            color: var(--text-secondary);
+        }
+
+        .note {
+            background: var(--bg-secondary);
+            border-left: 4px solid var(--text-primary);
+            padding: 16px;
+            margin: 20px 0;
+        }
+
+        .note p {
+            margin: 0;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                width: 100%;
+                position: relative;
+                height: auto;
+            }
+
+            .content {
+                margin-left: 0;
+                padding: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <aside class="sidebar">
+            <div class="sidebar-header">
+                <h1>Node.js Docs</h1>
+            </div>
+            
+            <div class="nav-section">
+                <h3>Sections 1-4</h3>
+                <div class="nav-item active" data-section="crud">1. Express CRUD Operations</div>
+                <div class="nav-item" data-section="http">2. Custom HTTP Server</div>
+                <div class="nav-item" data-section="sessions">3. Session Tracking</div>
+                <div class="nav-item" data-section="jwt">4. JWT Authorization</div>
+            </div>
+
+            <div class="nav-section">
+                <h3>Student Management</h3>
+                <div class="nav-item" data-section="sms">SMS HTML Pages</div>
+            </div>
+
+            <div class="nav-section">
+                <h3>Single Page Apps</h3>
+                <div class="nav-item" data-section="spa">5. SPA Implementation</div>
+            </div>
+        </aside>
+
+        <main class="content">
+            <!-- Section 1: CRUD Operations -->
+            <section class="doc-section active" id="crud">
+                <h2>1. Express CRUD Operations with REST API</h2>
+                
+                <p>CRUD (Create, Read, Update, Delete) operations allow you to manage student data through REST API endpoints. This example uses Express.js with MySQL database.</p>
+
+                <h3>Database Connection</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">db.js</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>const mysql = require('mysql2/promise');
+const mysqlPool = mysql.createPool({
+    host: 'localhost',
+    user: 'root',
+    password: '', // Update if necessary
+    database: 'nodejsdb'
+});
+module.exports = mysqlPool;</code></pre>
+                </div>
+
+                <h3>Express App Entry Point</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">index.js</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>const express = require('express');
+const app = express();
+const db = require('./db');
+const studentRoutes = require('./routes/student.routes');
+const bodyParser = require('body-parser');
+
+app.use(bodyParser.json());
+app.use('/students', studentRoutes);
+
+db.query('select 1')
+    .then(() => {
+        console.log('Database Connection Success..');
+        app.listen(3000, () => {
+            console.log('Server listening to port no 3000');
+        });
+    })
+    .catch(err => console.log('DB Connection Failed', err));</code></pre>
+                </div>
+
+                <h3>Student Controller</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">controllers/student.controller.js</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>const db = require('../db');
+
+// CREATE student
+exports.createStudent = async (req, res) => {
+    const { name, age } = req.body;
+    await db.query('INSERT INTO students (name, age) VALUES (?, ?)', [name, age]);
+    res.json({ message: "Student created" });
+};
+
+// READ all students
+exports.getStudents = async (req, res) => {
+    const [rows] = await db.query('SELECT * FROM students');
+    res.json(rows);
+};
+
+// UPDATE student
+exports.updateStudent = async (req, res) => {
+    const { id } = req.params;
+    const { name, age } = req.body;
+    await db.query('UPDATE students SET name = ?, age = ? WHERE id = ?', [name, age, id]);
+    res.json({ message: "Student updated" });
+};
+
+// DELETE student
+exports.deleteStudent = async (req, res) => {
+    const { id } = req.params;
+    await db.query('DELETE FROM students WHERE id = ?', [id]);
+    res.json({ message: "Student deleted" });
+};</code></pre>
+                </div>
+
+                <h3>Student Routes</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">routes/student.routes.js</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>const express = require('express');
+const router = express.Router();
+const studentCtrl = require('../controllers/student.controller');
+
+router.post('/', studentCtrl.createStudent); // Create
+router.get('/', studentCtrl.getStudents); // Read
+router.put('/:id', studentCtrl.updateStudent); // Update
+router.delete('/:id', studentCtrl.deleteStudent); // Delete
+
+module.exports = router;</code></pre>
+                </div>
+
+                <h3>MySQL Table Setup</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">SQL</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>CREATE TABLE students (
+    id INT AUTO_INCREMENT PRIMARY KEY,
+    name VARCHAR(100),
+    age INT
+);</code></pre>
+                </div>
+
+                <h3>Testing with Postman</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Operation</th>
+                            <th>Method</th>
+                            <th>Endpoint</th>
+                            <th>Body</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Create</td>
+                            <td>POST</td>
+                            <td>/students</td>
+                            <td>{ "name": "John", "age": 20 }</td>
+                        </tr>
+                        <tr>
+                            <td>Read All</td>
+                            <td>GET</td>
+                            <td>/students</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>Update</td>
+                            <td>PUT</td>
+                            <td>/students/1</td>
+                            <td>{ "name": "Jane", "age": 21 }</td>
+                        </tr>
+                        <tr>
+                            <td>Delete</td>
+                            <td>DELETE</td>
+                            <td>/students/1</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Section 2: Custom HTTP Server -->
+            <section class="doc-section" id="http">
+                <h2>2. Custom HTTP Server and Node.js Modules</h2>
+
+                <h3>Custom HTTP Server</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">server.js</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>const http = require('http');
+
+const server = http.createServer((req, res) => {
+    res.writeHead(200, { 'Content-Type': 'text/plain' });
+    res.end('Hello, this is a custom Node.js server!');
+});
+
+server.listen(3000, () => {
+    console.log('Server running on port 3000');
+});</code></pre>
+                </div>
+
+                <h3>OS Module Example</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">os-module.js</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>const os = require('os');
+console.log('Data Retrieved by Using OS Module in Node Js.\n');
+console.log('Hostname: ' + os.hostname() + '\n');
+console.log('Architecture: ' + os.arch() + '\n');
+console.log('OS Platform: ' + os.platform() + '\n');
+console.log('OS Type: ' + os.type() + '\n');
+
+var freeMemory = os.freemem();
+console.log('Free RAM: ' + Math.round(freeMemory/1024/1024/1024) + ' GB\n');
+
+var totalMemory = os.totalmem();
+console.log('Total RAM: ' + Math.round(totalMemory/1024/1024/1024) + ' GB\n');</code></pre>
+                </div>
+
+                <h3>Path Module Example</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">path-module.js</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>const path = require('path');
+
+console.log('File Name: \n' + __filename + '\n');
+console.log('Directory Name: \n' + __dirname + '\n');
+console.log('Base Name of File Name: \n' + path.basename(__filename) + '\n');
+console.log('Base Name of Directory Name: \n' + path.basename(__dirname) + '\n');
+
+var data = path.parse(__filename);
+console.log('Parser Data: \n');
+console.log(data);
+console.log('\n');
+
+console.log('isAbsolute for _filename: ' + path.isAbsolute(__filename) + '\n');
+console.log('isAbsolute for given relative file : ' + path.isAbsolute('./os.js') + '\n');
+
+console.log("Path Joining:\n");
+console.log(path.join("/MGIT", "ET", "CSM and CSD"));
+console.log(path.join("/MGIT", "//ET", "CSM and CSD"));
+console.log(path.join("/MGIT", "//ET", "../CSM and CSD"));
+console.log(path.join(__dirname, "CSM and CSD"));</code></pre>
+                </div>
+
+                <h3>Events Module Example</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">events-module.js</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>var events = require('events');
+var eventEmitter = new events.EventEmitter();
+
+// Listener for 'welcome' event
+eventEmitter.on('welcome', () => {
+    console.log('Welcome to NodeJs Lab..!');
+});
+
+// Trigger the 'welcome' event
+eventEmitter.emit('welcome');
+
+// Listener for 'welcomearg' event with argument
+eventEmitter.on('welcomearg', (message) => {
+    console.log(message);
+});
+
+// Trigger 'welcomearg' event with a message
+eventEmitter.emit('welcomearg', 'Message from Welcome Argument Event.');</code></pre>
+                </div>
+
+                <h3>Node.js Modules Summary</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Module</th>
+                            <th>Purpose</th>
+                            <th>Key Methods</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>OS</td>
+                            <td>System information</td>
+                            <td>hostname(), arch(), platform(), freemem(), totalmem()</td>
+                        </tr>
+                        <tr>
+                            <td>Path</td>
+                            <td>File path manipulation</td>
+                            <td>basename(), parse(), join(), isAbsolute()</td>
+                        </tr>
+                        <tr>
+                            <td>Events</td>
+                            <td>Event handling</td>
+                            <td>on(), emit()</td>
+                        </tr>
+                        <tr>
+                            <td>HTTP</td>
+                            <td>Create server</td>
+                            <td>createServer(), listen()</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Section 3: Session Tracking -->
+            <section class="doc-section" id="sessions">
+                <h2>3. Session Tracking: Cookies and HTTP Sessions</h2>
+
+                <p>Session tracking maintains user transactional history across multiple requests. Two main mechanisms: Cookies and HTTP Sessions.</p>
+
+                <h3>Cookies Example</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">cookies.js</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>const express = require('express');
+const cookieParser = require('cookie-parser');
+const app = express();
+
+app.use(cookieParser());
+
+app.get('/setcookie', (req, res) => {
+    res.cookie('username', 'student123', { maxAge: 60000 }); // Cookie for 1 minute
+    res.send('Cookie set!');
+});
+
+app.get('/getcookie', (req, res) => {
+    const user = req.cookies['username'];
+    res.send('Cookie value: ' + user);
+});
+
+app.listen(3000, () => {
+    console.log('Server on 3000');
+});</code></pre>
+                </div>
+
+                <h3>HTTP Session Example - Setup</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">index.js</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>const express = require('express');
+const bodyParser = require('body-parser');
+const cookieParser = require('cookie-parser');
+const handlers = require('./handlers');
+const app = express();
+
+app.use(bodyParser.json());
+app.use(cookieParser());
+
+app.post('/signin', handlers.signinHandler);
+app.get('/welcome', handlers.welcomeHandler);
+app.get('/logout', handlers.logoutHandler);
+
+app.listen(3000, () => {
+  console.log('Server started on port no 3000');
+});</code></pre>
+                </div>
+
+                <h3>HTTP Session Example - Handler</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">handlers.js</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>const uuid = require('uuid');
+const users = { user1: 'password1', user2: 'password2' };
+
+class Session {
+  constructor(username, expiresAt) {
+    this.username = username;
+    this.expiresAt = expiresAt;
+  }
+
+  isExpired() {
+    return this.expiresAt < new Date();
+  }
+}
+
+const sessions = {};
+
+// Signin Handler - creates a session and sends a cookie
+exports.signinHandler = (req, res) => {
+  const { username, password } = req.body;
+  if (!username || users[username] !== password) {
+    res.status(401).end();
+    return;
+  }
+
+  const sessionToken = uuid.v4();
+  const expiresAt = new Date(Date.now() + 120 * 1000); // 2 minutes
+  sessions[sessionToken] = new Session(username, expiresAt);
+  res.cookie('sessiontoken', sessionToken, { expires: expiresAt });
+  res.end();
+};
+
+// Welcome Handler - checks session from cookie
+exports.welcomeHandler = (req, res) => {
+  const sessionToken = req.cookies['sessiontoken'];
+  const userSession = sessions[sessionToken];
+
+  if (!sessionToken || !userSession || userSession.isExpired()) {
+    res.status(401).end();
+    return;
+  }
+  res.send('Welcome ' + userSession.username).end();
+};
+
+// Logout Handler - clears session and cookie
+exports.logoutHandler = (req, res) => {
+  const sessionToken = req.cookies['sessiontoken'];
+  delete sessions[sessionToken];
+  res.cookie('sessiontoken', '', { expires: new Date() });
+  res.end();
+};</code></pre>
+                </div>
+
+                <h3>Session vs Cookies Comparison</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Aspect</th>
+                            <th>Cookies</th>
+                            <th>HTTP Sessions</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Data Storage</td>
+                            <td>Client browser</td>
+                            <td>Server</td>
+                        </tr>
+                        <tr>
+                            <td>Security</td>
+                            <td>Less secure (visible)</td>
+                            <td>More secure</td>
+                        </tr>
+                        <tr>
+                            <td>Size Limit</td>
+                            <td>~4KB</td>
+                            <td>No limit</td>
+                        </tr>
+                        <tr>
+                            <td>Persistence</td>
+                            <td>Can be persistent</td>
+                            <td>Session-based</td>
+                        </tr>
+                        <tr>
+                            <td>Expiry</td>
+                            <td>Manual setting</td>
+                            <td>Configurable</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </section>
+
+            <!-- Section 4: JWT Authorization -->
+            <section class="doc-section" id="jwt">
+                <h2>4. JWT Authorization for Protected Endpoints</h2>
+
+                <p>JWT (JSON Web Token) is a secure way to transmit information between parties. It's encoded as a token that clients send with requests to access protected resources.</p>
+
+                <h3>JWT Setup</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">jwt-server.js</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>const express = require('express');
+const jwt = require('jsonwebtoken');
+const app = express();
+
+// Protected endpoint: Only accessible with valid JWT
+app.post('/api/posts', verifyToken, (req, res) => {
+  jwt.verify(req.token, 'mgitetnodejslab', (err, authData) => {
+    if (err) {
+      res.sendStatus(403); // Forbidden
+    } else {
+      res.json({ message: 'User Authenticated Successfully....!', authData });
+    }
+  });
+});
+
+// Endpoint to generate JWT for user
+app.post('/api/getToken', (req, res) => {
+  const user = { id: 1, fullname: 'Mallela Srikanth', email: 'mallelasrikanth@csemgit.ac.in' };
+  jwt.sign(user, 'mgitetnodejslab', { expiresIn: '30s' }, (err, token) => {
+    res.json({ token });
+  });
+});
+
+// Middleware: Verify JWT Token from header
+function verifyToken(req, res, next) {
+  const bearerHeader = req.headers['authorization'];
+  if (typeof bearerHeader !== 'undefined') {
+    req.token = bearerHeader.split(' ')[1];
+    next();
+  } else {
+    res.sendStatus(403);
+  }
+}
+
+app.listen(3000, () => {
+  console.log('Server listening to port no 3000');
+});</code></pre>
+                </div>
+
+                <h3>How JWT Works</h3>
+                <ol>
+                    <li><strong>Request Token:</strong> Call /api/getToken → Get JWT token</li>
+                    <li><strong>Send Protected Request:</strong> Include token in Authorization header: Bearer &lt;token&gt;</li>
+                    <li><strong>Verify Token:</strong> Server checks token validity</li>
+                    <li><strong>Access Granted:</strong> If valid, user can access protected resource</li>
+                </ol>
+
+                <h3>JWT Testing Flow with Postman</h3>
+                <table>
+                    <thead>
+                        <tr>
+                            <th>Step</th>
+                            <th>Method</th>
+                            <th>Endpoint</th>
+                            <th>Headers</th>
+                            <th>Body</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>1</td>
+                            <td>POST</td>
+                            <td>/api/getToken</td>
+                            <td>-</td>
+                            <td>-</td>
+                        </tr>
+                        <tr>
+                            <td>2</td>
+                            <td>POST</td>
+                            <td>/api/posts</td>
+                            <td>Authorization: Bearer &lt;token&gt;</td>
+                            <td>-</td>
+                        </tr>
+                    </tbody>
+                </table>
+
+                <h3>JWT Structure</h3>
+                <p>A JWT token consists of three parts separated by dots:</p>
+                <ul>
+                    <li><strong>Header:</strong> Specifies token type (JWT) and hashing algorithm</li>
+                    <li><strong>Payload:</strong> Contains user data (claims)</li>
+                    <li><strong>Signature:</strong> Ensures token integrity</li>
+                </ul>
+
+                <div class="note">
+                    <p><strong>Example Token:</strong> eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MSwibmFtZSI6IkpvaG4ifQ.SflKxwRJSMeK</p>
+                </div>
+            </section>
+
+            <!-- SMS Section -->
+            <section class="doc-section" id="sms">
+                <h2>Student Management System - HTML Pages</h2>
+
+                <p>Complete routing system for a Student Management System with registration, login, contact, and about pages.</p>
+
+                <h3>Quick Setup</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">Terminal</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>mkdir student-management
+cd student-management
+npm init -y
+npm install express</code></pre>
+                </div>
+
+                <h3>Server File</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">index.js</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>const express = require('express');
+const path = require('path');
+const app = express();
+
+app.get('/', (req, res) => res.sendFile(path.join(__dirname, 'home.html')));
+app.get('/registration', (req, res) => res.sendFile(path.join(__dirname, 'registration.html')));
+app.get('/login', (req, res) => res.sendFile(path.join(__dirname, 'login.html')));
+app.get('/contact', (req, res) => res.sendFile(path.join(__dirname, 'contact.html')));
+app.get('/about', (req, res) => res.sendFile(path.join(__dirname, 'about.html')));
+
+app.listen(3000, () => console.log('Server on port 3000'));</code></pre>
+                </div>
+
+                <h3>HTML Pages</h3>
+
+                <h4>1. Home Page</h4>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">home.html</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;&lt;title&gt;Home&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Welcome to Student Management&lt;/h1&gt;
+&lt;nav&gt;
+&lt;a href="/"&gt;Home&lt;/a&gt; | &lt;a href="/registration"&gt;Register&lt;/a&gt; | &lt;a href="/login"&gt;Login&lt;/a&gt; | &lt;a href="/contact"&gt;Contact&lt;/a&gt; | &lt;a href="/about"&gt;About&lt;/a&gt;
+&lt;/nav&gt;
+&lt;p&gt;This is the home page.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                </div>
+
+                <h4>2. Registration Page</h4>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">registration.html</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;&lt;title&gt;Registration&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Registration&lt;/h1&gt;
+&lt;form&gt;
+&lt;input type="text" placeholder="Name" required&gt;&lt;br&gt;
+&lt;input type="email" placeholder="Email" required&gt;&lt;br&gt;
+&lt;input type="password" placeholder="Password" required&gt;&lt;br&gt;
+&lt;button type="submit"&gt;Register&lt;/button&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                </div>
+
+                <h4>3. Login Page</h4>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">login.html</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;&lt;title&gt;Login&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Login&lt;/h1&gt;
+&lt;form&gt;
+&lt;input type="email" placeholder="Email" required&gt;&lt;br&gt;
+&lt;input type="password" placeholder="Password" required&gt;&lt;br&gt;
+&lt;button type="submit"&gt;Login&lt;/button&gt;
+&lt;/form&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                </div>
+
+                <h4>4. Contact Page</h4>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">contact.html</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;&lt;title&gt;Contact&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Contact Us&lt;/h1&gt;
+&lt;p&gt;Email: info@studentmanagement.com&lt;/p&gt;
+&lt;p&gt;Phone: +91 9876543210&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                </div>
+
+                <h4>5. About Page</h4>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">about.html</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;&lt;title&gt;About&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;About Student Management System&lt;/h1&gt;
+&lt;p&gt;A simple system to manage student profiles and access.&lt;/p&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                </div>
+
+                <h3>How to Run</h3>
+                <ol>
+                    <li>Place index.js and all 5 HTML files in the same folder</li>
+                    <li>Run: <code>node index.js</code></li>
+                    <li>Open browser: http://localhost:3000</li>
+                    <li>Click navigation links to test routing</li>
+                </ol>
+
+                <div class="note">
+                    <p><strong>Key Points:</strong> Express routing with GET method • Navigation between pages using links • Static file serving with res.sendFile() • Path module usage for file paths • Basic HTML forms for registration and login</p>
+                </div>
+            </section>
+
+            <!-- SPA Section -->
+            <section class="doc-section" id="spa">
+                <h2>5. Single Page Applications (SPAs)</h2>
+
+                <p>Five complete Single Page Applications with Express.js serving static HTML files.</p>
+
+                <h3>Project Initialization</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">Terminal</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>mkdir spa-project
+cd spa-project
+npm init -y
+npm install express</code></pre>
+                </div>
+
+                <h3>Server Setup</h3>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">index.js</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>const express = require("express");
+const path = require("path");
+const app = express();
+const port = 3000;
+
+app.get("/", (req, res) => {
+    res.sendFile(path.join(__dirname, "index.html")); // Change to respective SPA
+});
+
+app.listen(port, () => {
+    console.log(`Server running on port no: ${port}`);
+});</code></pre>
+                </div>
+
+                <h3>SPA HTML Files</h3>
+
+                <h4>1. Student Profile SPA</h4>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">index.html</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;&lt;title&gt;Student Profile&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Student Profile&lt;/h1&gt;
+&lt;h2&gt;Basic Details&lt;/h2&gt;
+&lt;p&gt;Name: Rohan Kumar&lt;/p&gt;
+&lt;p&gt;Age: 20&lt;/p&gt;
+&lt;p&gt;Email: rohan.kumar@example.com&lt;/p&gt;
+&lt;p&gt;Phone: +91 9876543210&lt;/p&gt;
+&lt;h2&gt;Educational Qualifications&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;10th Standard – 92% (CBSE)&lt;/li&gt;
+&lt;li&gt;12th Standard – 89% (CBSE)&lt;/li&gt;
+&lt;li&gt;B.Tech in Computer Science – Currently 2nd Year&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Address&lt;/h2&gt;
+&lt;p&gt;Flat No. 202, Green Heights Apartments, Madhapur, Hyderabad, Telangana - 500081&lt;/p&gt;
+&lt;h2&gt;Academic Achievements&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;1st Prize – State Level Coding Competition&lt;/li&gt;
+&lt;li&gt;Top Performer – Mathematics Olympiad&lt;/li&gt;
+&lt;li&gt;Silver Medal – Science Fair Innovation Project&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                </div>
+
+                <h4>2. Faculty Profile SPA</h4>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">faculty.html</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;&lt;title&gt;Faculty Profile&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Faculty Profile&lt;/h1&gt;
+&lt;h2&gt;Basic Details&lt;/h2&gt;
+&lt;p&gt;Name: Dr. Anita Sharma&lt;/p&gt;
+&lt;p&gt;Email: anita.sharma@example.com&lt;/p&gt;
+&lt;p&gt;Phone: +91 9123456789&lt;/p&gt;
+&lt;h2&gt;Education Qualifications&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;PhD in Computer Science&lt;/li&gt;
+&lt;li&gt;M.Tech in Software Engineering&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Experience&lt;/h2&gt;
+&lt;p&gt;10 years Teaching and Research&lt;/p&gt;
+&lt;h2&gt;Subjects Taught&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Data Structures&lt;/li&gt;
+&lt;li&gt;Operating Systems&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                </div>
+
+                <h4>3. Department SPA</h4>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">department.html</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;&lt;title&gt;Department&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Department of Computer Science&lt;/h1&gt;
+&lt;h2&gt;About&lt;/h2&gt;
+&lt;p&gt;Leading research and teaching department focused on innovation.&lt;/p&gt;
+&lt;h2&gt;Contact Details&lt;/h2&gt;
+&lt;p&gt;Email: csdept@example.com&lt;/p&gt;
+&lt;p&gt;Phone: +91 8901234567&lt;/p&gt;
+&lt;h2&gt;Faculty List&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Dr. Anita Sharma&lt;/li&gt;
+&lt;li&gt;Mr. Rajesh Kumar&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Workshops Conducted&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;AI Workshop 2024&lt;/li&gt;
+&lt;li&gt;Cloud Computing Workshop 2025&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                </div>
+
+                <h4>4. Institute SPA</h4>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">institute.html</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;&lt;title&gt;Institute&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Our Institute&lt;/h1&gt;
+&lt;h2&gt;About&lt;/h2&gt;
+&lt;p&gt;Premier institute for quality education since 1980.&lt;/p&gt;
+&lt;h2&gt;Contact Details&lt;/h2&gt;
+&lt;p&gt;Email: info@abcit.edu&lt;/p&gt;
+&lt;p&gt;Phone: +91 9001234000&lt;/p&gt;
+&lt;p&gt;Address: Main Road, Cityville, India&lt;/p&gt;
+&lt;h2&gt;Courses Offered&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;B.Tech - CS, IT, ECE&lt;/li&gt;
+&lt;li&gt;M.Tech - CSE, VLSI, Robotics&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Events Conducted&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Annual TechFest&lt;/li&gt;
+&lt;li&gt;Guest Lectures&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                </div>
+
+                <h4>5. Lab SPA</h4>
+                <div class="code-block">
+                    <div class="code-header">
+                        <span class="code-label">lab.html</span>
+                        <button class="copy-btn" onclick="copyCode(this)">Copy</button>
+                    </div>
+                    <pre><code>&lt;!DOCTYPE html&gt;
+&lt;html&gt;
+&lt;head&gt;&lt;title&gt;Our Lab&lt;/title&gt;&lt;/head&gt;
+&lt;body&gt;
+&lt;h1&gt;Our Lab&lt;/h1&gt;
+&lt;h2&gt;Systems Configuration&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Intel i7 Processor&lt;/li&gt;
+&lt;li&gt;16 GB RAM&lt;/li&gt;
+&lt;li&gt;512 GB SSD&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Software in Lab&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Visual Studio Code&lt;/li&gt;
+&lt;li&gt;Node.js&lt;/li&gt;
+&lt;li&gt;Postman&lt;/li&gt;
+&lt;li&gt;Git&lt;/li&gt;
+&lt;/ul&gt;
+&lt;h2&gt;Lab Subjects List&lt;/h2&gt;
+&lt;ul&gt;
+&lt;li&gt;Data Structures&lt;/li&gt;
+&lt;li&gt;Operating Systems&lt;/li&gt;
+&lt;li&gt;Database Management Systems&lt;/li&gt;
+&lt;/ul&gt;
+&lt;/body&gt;
+&lt;/html&gt;</code></pre>
+                </div>
+
+                <h3>Testing Different SPAs</h3>
+                <p>To test each SPA, update <code>index.js</code> line in app.get():</p>
+                <ul>
+                    <li>For Student Profile: <code>res.sendFile(path.join(__dirname, "index.html"));</code></li>
+                    <li>For Faculty Profile: <code>res.sendFile(path.join(__dirname, "faculty.html"));</code></li>
+                    <li>For Department: <code>res.sendFile(path.join(__dirname, "department.html"));</code></li>
+                    <li>For Institute: <code>res.sendFile(path.join(__dirname, "institute.html"));</code></li>
+                    <li>For Lab: <code>res.sendFile(path.join(__dirname, "lab.html"));</code></li>
+                </ul>
+
+                <div class="note">
+                    <p><strong>Exam Key Points:</strong> Single Page Application (SPA) - all content on ONE page • Express.js routing with GET method • Static HTML file serving • Simple and clean HTML structure • Sections organized with headings and lists • No database or backend logic needed for basic SPAs</p>
+                </div>
+            </section>
+        </main>
+    </div>
+
+    <script>
+        // Navigation
+        const navItems = document.querySelectorAll('.nav-item');
+        const docSections = document.querySelectorAll('.doc-section');
+
+        navItems.forEach(item => {
+            item.addEventListener('click', () => {
+                const sectionId = item.getAttribute('data-section');
+                
+                // Update active nav item
+                navItems.forEach(nav => nav.classList.remove('active'));
+                item.classList.add('active');
+                
+                // Show corresponding section
+                docSections.forEach(section => {
+                    section.classList.remove('active');
+                });
+                document.getElementById(sectionId).classList.add('active');
+            });
+        });
+
+        // Copy functionality
+        function copyCode(button) {
+            const codeBlock = button.closest('.code-block');
+            const code = codeBlock.querySelector('pre code').textContent;
+            
+            navigator.clipboard.writeText(code).then(() => {
+                const originalText = button.textContent;
+                button.textContent = 'Copied!';
+                button.classList.add('copied');
+                
+                setTimeout(() => {
+                    button.textContent = originalText;
+                    button.classList.remove('copied');
+                }, 2000);
+            }).catch(err => {
+                console.error('Failed to copy:', err);
+            });
+        }
+    </script>
+</body>
+</html>
